@@ -16,3 +16,19 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::any('test', function (Request $request) {
+    if ($request->isMethod('POST')) {
+        $name = $request->input('name');
+    }
+    return 'hello ' . ($name ?? 'world');
+});
+
+Route::group(['namespace' => 'home', 'prefix' => 'home'], function () {
+    Route::group(['prefix' => 'auth'], function () {
+        Route::post('register', 'AuthController@register');
+        Route::post('login', 'AuthController@login');
+        Route::get('logout', 'AuthController@logout');
+        Route::get('user', 'AuthController@user');
+    });
+});
