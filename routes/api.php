@@ -24,7 +24,16 @@ Route::any('test', function (Request $request) {
     return 'hello ' . ($name ?? 'world');
 });
 
-Route::group(['namespace' => 'home', 'prefix' => 'home'], function () {
+Route::group(['namespace' => 'Home', 'prefix' => 'home'], function () {
+    Route::group(['prefix' => 'auth'], function () {
+        Route::post('register', 'AuthController@register');
+        Route::post('login', 'AuthController@login');
+        Route::get('logout', 'AuthController@logout');
+        Route::get('user', 'AuthController@user');
+    });
+});
+
+Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
     Route::group(['prefix' => 'auth'], function () {
         Route::post('register', 'AuthController@register');
         Route::post('login', 'AuthController@login');
