@@ -6,19 +6,12 @@ use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('jwt.auth', ['except' => ['register', 'login']]);
-        $this->changeModel();
-    }
-
-    public function changeModel() {
-        config(['jwt.user' => 'App\Models\Admin']);
-        config(['auth.providers.users.model' => Admin::class]);
+        $this->middleware('verifyToken', ['except' => ['register', 'login']]);
     }
 
     public function register(Request $request) {
@@ -31,7 +24,7 @@ class AuthController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'code' => 8,
+                'code' => 1,
                 'message' => $validator->errors()->first()
             ], 400);
         }
@@ -39,11 +32,10 @@ class AuthController extends Controller
             'name' => $request->input('name'),
             'password' => bcrypt($request->input('password')),
         ]);
-        $token = JWTAuth::fromUser($admin);
+        $token = auth()->login($admin);
         return response()->json([
             'code' => 0,
             'message' => '注册成功',
-            'admin' => $admin,
             'token' => $token
         ]);
     }
@@ -58,14 +50,14 @@ class AuthController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'code' => 8,
+                'code' => 1,
                 'message' => $validator->errors()->first()
             ], 400);
         }
         $credentials = $request->only('name', 'password');
-        if (!$token = JWTAuth::attempt($credentials)) {
+        if (!$token = auth()->attempt($credentials)) {
             return response([
-                'code' => 8,
+                'code' => 1,
                 'message' => '名字或密码错误'
             ], 400);
         }
@@ -77,15 +69,15 @@ class AuthController extends Controller
     }
 
     public function logout() {
-        JWTAuth::invalidate();
+        auth()->logout();
         return response()->json([
             'code' => 0,
             'message' => '登出成功'
         ]);
     }
 
-    public function user() {
-        $admin = JWTAuth::parseToken()->authenticate();
+    public function me() {
+        $admin = auth()->user();
         return response()->json([
             'code' => 0,
             'admin' => $admin

@@ -6,13 +6,12 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('jwt.auth', ['except' => ['register', 'login']]);
+        $this->middleware('verifyToken', ['except' => ['register', 'login']]);
     }
 
     public function register(Request $request) {
@@ -29,7 +28,7 @@ class AuthController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'code' => 8,
+                'code' => 1,
                 'message' => $validator->errors()->first()
             ], 400);
         }
@@ -38,11 +37,10 @@ class AuthController extends Controller
             'phone' => $request->input('phone'),
             'password' => bcrypt($request->input('password')),
         ]);
-        $token = JWTAuth::fromUser($user);
+        $token = auth()->login($user);
         return response()->json([
             'code' => 0,
             'message' => '注册成功',
-            'user' => $user,
             'token' => $token
         ]);
     }
@@ -58,14 +56,14 @@ class AuthController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'code' => 8,
+                'code' => 1,
                 'message' => $validator->errors()->first()
             ], 400);
         }
         $credentials = $request->only('phone', 'password');
-        if (!$token = JWTAuth::attempt($credentials)) {
+        if (!$token = auth()->attempt($credentials)) {
             return response([
-                'code' => 8,
+                'code' => 1,
                 'message' => '手机号或密码错误'
             ], 400);
         }
@@ -77,15 +75,15 @@ class AuthController extends Controller
     }
 
     public function logout() {
-        JWTAuth::invalidate();
+        auth()->logout();
         return response()->json([
             'code' => 0,
             'message' => '登出成功'
         ]);
     }
 
-    public function user() {
-        $user = JWTAuth::parseToken()->authenticate();
+    public function me() {
+        $user = auth()->user();
         return response()->json([
             'code' => 0,
             'user' => $user

@@ -22,15 +22,15 @@ Route::group(['namespace' => 'Home', 'prefix' => 'home'], function () {
         Route::post('register', 'AuthController@register');
         Route::post('login', 'AuthController@login');
         Route::get('logout', 'AuthController@logout');
-        Route::get('user', 'AuthController@user');
+        Route::get('me', 'AuthController@me');
     });
 });
 
-Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
+Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'useAdminGuard'], function () {
     Route::group(['prefix' => 'auth'], function () {
         Route::post('register', 'AuthController@register');
         Route::post('login', 'AuthController@login');
         Route::get('logout', 'AuthController@logout');
-        Route::get('user', 'AuthController@user');
+        Route::get('me', 'AuthController@me');
     });
 });
