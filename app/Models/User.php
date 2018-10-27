@@ -38,7 +38,8 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'openid', 'session_key', 'phone',
+        'openid', 'session_key', 'name', 'phone', 'max_score',
+        'min_score', 'province_id', 'subject', 'times', 'is_vip',
     ];
 
     /**
@@ -47,11 +48,18 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'session_key',
+        'openid', 'session_key',
     ];
 
     public static function add($data) {
         $user = self::updateOrCreate(['openid' => $data['openid']], $data);
+        return $user;
+    }
+
+    public static function setInfo($uid, $data) {
+        $user = self::find($uid);
+        $data['times'] = $user->times + 1;
+        $user->update($data);
         return $user;
     }
 }
