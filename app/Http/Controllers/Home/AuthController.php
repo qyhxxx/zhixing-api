@@ -54,19 +54,9 @@ class AuthController extends Controller
     public function setUser(Request $request) {
         $data = $request->all();
         $validator = Validator::make($data, [
-            'name' => 'required',
-            'phone' => 'required|numeric',
-            'max_score' => 'required|integer',
-            'min_score' => 'required|integer',
-            'province_id' => 'required|integer|min:1',
-            'subject' => 'required|integer',
+            'phone' => 'unique:users',
         ], [
-            'name' => '请填写姓名',
-            'phone' => '请正确填写手机号',
-            'max_score' => '请正确填写高考预估最高分',
-            'min_score' => '请正确填写高考预估最低分',
-            'province_id' => '请选择省份',
-            'subject' => '请选择文理科目',
+            'phone.unique' => '手机号已被注册'
         ]);
         if ($validator->fails()) {
             return response()->json([

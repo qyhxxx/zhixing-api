@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('openid')->unique();
             $table->string('session_key')->unique();
             $table->string('name')->nullable();
-            $table->string('phone')->nullable();
+            $table->string('phone')->unique()->nullable();
             $table->integer('max_score')->default(0);
             $table->integer('min_score')->default(0);
             $table->integer('province_id')->default(0);

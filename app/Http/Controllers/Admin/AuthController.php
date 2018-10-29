@@ -15,12 +15,11 @@ class AuthController extends Controller
     }
 
     public function register(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'password' => 'required',
+        $data = $request->all();
+        $validator = Validator::make($data, [
+            'name' => 'unique:admins',
         ], [
-            'name.required' => '名字不能为空',
-            'password.required' => '密码不能为空',
+            'name.required' => '用户名已被注册',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -29,8 +28,8 @@ class AuthController extends Controller
             ], 400);
         }
         $admin = Admin::add([
-            'name' => $request->input('name'),
-            'password' => bcrypt($request->input('password')),
+            'name' => $data['name'],
+            'password' => bcrypt($data['password']),
         ]);
         $token = auth()->login($admin);
         return response()->json([
@@ -41,19 +40,6 @@ class AuthController extends Controller
     }
 
     public function login(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'password' => 'required',
-        ], [
-            'name.required' => '名字不能为空',
-            'password.required' => '密码不能为空',
-        ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'code' => 1,
-                'message' => $validator->errors()->first()
-            ], 400);
-        }
         $credentials = $request->only('name', 'password');
         if (!$token = auth()->attempt($credentials)) {
             return response([
