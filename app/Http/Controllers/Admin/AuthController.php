@@ -19,7 +19,7 @@ class AuthController extends Controller
         $validator = Validator::make($data, [
             'name' => 'unique:admins',
         ], [
-            'name.required' => '用户名已被注册',
+            'name.unique' => '用户名已被注册',
         ]);
         if ($validator->fails()) {
             return response()->json([
