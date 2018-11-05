@@ -24,13 +24,20 @@ class FileController extends Controller
             return response()->json([
                 'code' => 1,
                 'message' => '上传失败'
-            ]);
+            ], 400);
         }
     }
 
     public function download(Request $request) {
         $url = $request->input('url');
         $name = $request->input('name');
-        return response()->download($url, $name);
+        if (file_exists($url)) {
+            return response()->download($url, $name);
+        } else {
+            return response()->json([
+                'code' => 3,
+                'message' => '文件不存在'
+            ], 404);
+        }
     }
 }
