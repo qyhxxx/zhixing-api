@@ -34,3 +34,10 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'useA
         Route::get('me', 'AuthController@me');
     });
 });
+
+Route::group(['namespace' => 'Common', 'prefix' => 'common'], function () {
+    Route::group(['prefix' => 'file'], function () {
+        Route::post('upload', 'FileController@upload');
+        Route::post('download', 'FileController@download');
+    });
+});
