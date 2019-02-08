@@ -14,4 +14,18 @@ class Functions {
         curl_close($curl);
         return json_decode($res);
     }
+
+    static function generateAdmin() {
+        $name = '';
+        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        for ($i = 0; $i < 4; $i++) {
+            $name .= $chars[mt_rand(0, strlen($chars) - 1)];
+        }
+        $password = bcrypt('123456');
+        return [
+            'name' => $name,
+            'password' => $password,
+            'authority' => 1
+        ];
+    }
 }

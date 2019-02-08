@@ -32,6 +32,11 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'useA
         Route::post('login', 'AuthController@login');
         Route::get('logout', 'AuthController@logout');
         Route::get('me', 'AuthController@me');
+        Route::post('resetPassword', 'AuthController@resetPassword');
+    });
+    Route::group(['prefix' => 'manage'], function () {
+        Route::get('getAdminList', 'ManageController@getAdminList');
+        Route::get('addAdmin', 'ManageController@addAdmin');
     });
 });
 

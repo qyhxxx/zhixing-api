@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -30,6 +31,7 @@ class AuthController extends Controller
         $admin = Admin::add([
             'name' => $data['name'],
             'password' => bcrypt($data['password']),
+            'authority' => 1
         ]);
         $token = auth()->login($admin);
         return response()->json([
@@ -67,6 +69,30 @@ class AuthController extends Controller
         return response()->json([
             'code' => 0,
             'admin' => $admin
+        ]);
+    }
+
+    public function resetPassword(Request $request) {
+        $data = $request->all();
+        $admin = auth()->user();
+        $credentials = [
+            'name' => $admin->name,
+            'password' => $data['old']
+        ];
+        if (!auth()->validate($credentials)) {
+            return response([
+                'code' => 1,
+                'message' => '原密码错误'
+            ], 400);
+        }
+        $data['password'] = bcrypt($data['new1']);
+        unset($data['old']);
+        unset($data['new1']);
+        unset($data['new2']);
+        Admin::reset($admin->id, $data);
+        return response()->json([
+            'code' => 0,
+            'message' => '重置密码成功'
         ]);
     }
 }

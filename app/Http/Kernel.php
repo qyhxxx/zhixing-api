@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CheckAuthority;
 use App\Http\Middleware\Cors;
 use App\Http\Middleware\VerifyToken;
 use App\Http\Middleware\UseAdminGuard;
@@ -63,5 +64,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verifyToken' => VerifyToken::class,
         'useAdminGuard' => UseAdminGuard::class,
+        'checkAuthority' => CheckAuthority::class,
     ];
 }

@@ -38,7 +38,7 @@ class Admin extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name', 'password',
+        'name', 'password', 'authority',
     ];
 
     /**
@@ -50,8 +50,21 @@ class Admin extends Authenticatable implements JWTSubject
         'password',
     ];
 
+    protected $roles = ['supMng', 'ordMng'];
+
     public static function add($data) {
         $admin = self::create($data);
         return $admin;
+    }
+
+    public static function reset($aid, $data) {
+        $admin = self::find($aid);
+        $admin->update($data);
+        return $admin;
+    }
+
+    public static function getAllAdmins() {
+        $admins = self::paginate(15);
+        return $admins;
     }
 }
