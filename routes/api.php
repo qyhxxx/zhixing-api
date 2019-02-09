@@ -41,8 +41,9 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'useA
     Route::group(['prefix' => 'product'], function () {
         Route::post('create', 'ProductController@create');
         Route::post('edit/{pid}', 'ProductController@edit');
-        Route::post('uploadImg', 'ProductController@uploadImg');
-        Route::get('delete/{id}', 'ProductController@delete');
+        Route::post('uploadImg/{pid}', 'ProductController@uploadImg');
+        Route::get('find/{pid}', 'ProductController@find');
+        Route::get('delete/{pid}', 'ProductController@delete');
         Route::get('getList', 'ProductController@getList');
     });
 });

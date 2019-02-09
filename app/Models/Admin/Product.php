@@ -21,6 +21,11 @@ class Product extends Model
         return $product;
     }
 
+    public static function getProductByPid($pid) {
+        $product = self::find($pid);
+        return $product;
+    }
+
     public static function deleteByPid($pid) {
         self::destroy($pid);
     }

@@ -47,17 +47,17 @@ class ProductController extends Controller
         ]);
     }
 
-    public function uploadImg(Request $request) {
+    public function uploadImg(Request $request, $pid) {
         if ($request->hasFile('upload') && $request->file('upload')->isValid()) {
             $upload = $request->file('upload');
-            $id = $request->input('id');
-            $img = Functions::uploadFile($upload, 'products/'.$id);
-            $img['pid'] = $id;
+            $img = Functions::uploadFile($upload, 'products/'.$pid);
+            $img['pid'] = $pid;
             ProductImg::add($img);
             return response()->json([
                 'code' => 0,
                 'message' => '上传成功',
                 'uploaded' => true,
+                'pid' => $pid,
                 'name' => $img['name'],
                 'path' => $img['path'],
                 'url' => $img['url']
@@ -71,11 +71,19 @@ class ProductController extends Controller
         }
     }
 
-    public function delete($id) {
-        ProductImg::deleteAllByPid($id);
-        $directory = 'products/'.$id;
+    public function find($pid) {
+        $product = Product::getProductByPid($pid);
+        return response()->json([
+            'code' => 0,
+            'product' => $product
+        ]);
+    }
+
+    public function delete($pid) {
+        ProductImg::deleteAllByPid($pid);
+        $directory = 'products/'.$pid;
         Functions::deleteDirectory($directory);
-        Product::deleteByPid($id);
+        Product::deleteByPid($pid);
         return response()->json([
             'code' => 0,
             'message' => '删除成功'
