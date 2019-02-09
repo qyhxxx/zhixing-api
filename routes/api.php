@@ -34,15 +34,15 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'useA
         Route::post('resetPassword', 'AuthController@resetPassword');
     });
     Route::group(['prefix' => 'manage'], function () {
-        Route::get('getList', 'ManageController@getList');
         Route::get('add', 'ManageController@add');
         Route::get('delete/{id}', 'ManageController@delete');
+        Route::get('getList', 'ManageController@getList');
     });
-});
-
-Route::group(['namespace' => 'Common', 'prefix' => 'common'], function () {
-    Route::group(['prefix' => 'file'], function () {
-        Route::post('upload', 'FileController@upload');
-        Route::post('download', 'FileController@download');
+    Route::group(['prefix' => 'product'], function () {
+        Route::post('create', 'ProductController@create');
+        Route::post('edit', 'ProductController@edit');
+        Route::post('uploadImg', 'ProductController@uploadImg');
+        Route::get('delete/{id}', 'ProductController@delete');
+        Route::get('getList', 'ProductController@getList');
     });
 });

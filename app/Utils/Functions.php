@@ -2,6 +2,8 @@
 
 namespace App\Utils;
 
+use Illuminate\Support\Facades\Storage;
+
 class Functions {
     static function httpGet($url) {
         $curl = curl_init();
@@ -27,5 +29,24 @@ class Functions {
             'password' => $password,
             'authority' => 1
         ];
+    }
+
+    static function uploadFile($file, $directory) {
+        $name = $file->getClientOriginalName();
+        $path = $file->store($directory, 'public');
+        $url = Storage::disk('public')->url($path);
+        return [
+            'name' => $name,
+            'path' => $path,
+            'url' => $url
+        ];
+    }
+
+    static function deleteFile($path) {
+        Storage::disk('public')->delete($path);
+    }
+
+    static function deleteDirectory($directory) {
+        Storage::disk('public')->deleteDirectory($directory);
     }
 }
