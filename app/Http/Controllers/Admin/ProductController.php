@@ -37,9 +37,8 @@ class ProductController extends Controller
         ]);
     }
 
-    public function edit(Request $request) {
+    public function edit(Request $request, $pid) {
         $data = $request->all();
-        $pid = $data['id'];
         $product = Product::edit($pid, $data);
         return response()->json([
             'code' => 0,
