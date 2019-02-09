@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin;
+use App\Models\Admin\Admin;
 use App\Utils\Functions;
 
 class ManageController extends Controller

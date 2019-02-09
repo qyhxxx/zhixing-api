@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Admin;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject
+class Admin extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
@@ -38,8 +38,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'openid', 'session_key', 'name', 'phone', 'max_score',
-        'min_score', 'province_id', 'subject', 'times', 'is_vip',
+        'name', 'password', 'authority',
     ];
 
     /**
@@ -48,18 +47,28 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'openid', 'session_key',
+        'password',
     ];
 
+    protected $roles = ['supMng', 'ordMng'];
+
     public static function add($data) {
-        $user = self::updateOrCreate(['openid' => $data['openid']], $data);
-        return $user;
+        $admin = self::create($data);
+        return $admin;
     }
 
-    public static function setInfo($uid, $data) {
-        $user = self::find($uid);
-        $data['times'] = $user->times + 1;
-        $user->update($data);
-        return $user;
+    public static function reset($aid, $data) {
+        $admin = self::find($aid);
+        $admin->update($data);
+        return $admin;
+    }
+
+    public static function getAllAdmins() {
+        $admins = self::all();
+        return $admins;
+    }
+
+    public static function deleteByAid($aid) {
+        self::destroy($aid);
     }
 }
