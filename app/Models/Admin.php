@@ -64,7 +64,11 @@ class Admin extends Authenticatable implements JWTSubject
     }
 
     public static function getAllAdmins() {
-        $admins = self::paginate(15);
+        $admins = self::all();
         return $admins;
+    }
+
+    public static function deleteByAid($aid) {
+        self::destroy($aid);
     }
 }

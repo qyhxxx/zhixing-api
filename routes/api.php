@@ -28,15 +28,15 @@ Route::group(['namespace' => 'Home', 'prefix' => 'home'], function () {
 
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'useAdminGuard'], function () {
     Route::group(['prefix' => 'auth'], function () {
-        Route::post('register', 'AuthController@register');
         Route::post('login', 'AuthController@login');
         Route::get('logout', 'AuthController@logout');
         Route::get('me', 'AuthController@me');
         Route::post('resetPassword', 'AuthController@resetPassword');
     });
     Route::group(['prefix' => 'manage'], function () {
-        Route::get('getAdminList', 'ManageController@getAdminList');
-        Route::get('addAdmin', 'ManageController@addAdmin');
+        Route::get('getList', 'ManageController@getList');
+        Route::get('add', 'ManageController@add');
+        Route::get('delete/{id}', 'ManageController@delete');
     });
 });
 

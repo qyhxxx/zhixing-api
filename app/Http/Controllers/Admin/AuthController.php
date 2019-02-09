@@ -15,32 +15,6 @@ class AuthController extends Controller
         $this->middleware('verifyToken', ['except' => ['register', 'login']]);
     }
 
-    public function register(Request $request) {
-        $data = $request->all();
-        $validator = Validator::make($data, [
-            'name' => 'unique:admins',
-        ], [
-            'name.unique' => '用户名已被注册',
-        ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'code' => 1,
-                'message' => $validator->errors()->first()
-            ], 400);
-        }
-        $admin = Admin::add([
-            'name' => $data['name'],
-            'password' => bcrypt($data['password']),
-            'authority' => 1
-        ]);
-        $token = auth()->login($admin);
-        return response()->json([
-            'code' => 0,
-            'message' => '注册成功',
-            'token' => $token
-        ]);
-    }
-
     public function login(Request $request) {
         $credentials = $request->only('name', 'password');
         if (!$token = auth()->attempt($credentials)) {
