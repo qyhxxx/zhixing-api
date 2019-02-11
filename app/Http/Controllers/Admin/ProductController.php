@@ -13,7 +13,7 @@ class ProductController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('verifyToken');
+        $this->middleware('verifyToken', ['except' => ['uploadImg']]);
     }
 
     public function create(Request $request) {
