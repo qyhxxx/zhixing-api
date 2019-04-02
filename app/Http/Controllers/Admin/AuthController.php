@@ -23,7 +23,7 @@ class AuthController extends Controller
         $admin = Admin::add([
             'name' => 'sup0',
             'password' => bcrypt('sup0'),
-            'authority' => 1
+            'authority' => 0
         ]);
         $token = auth()->login($admin);
         return response()->json([
