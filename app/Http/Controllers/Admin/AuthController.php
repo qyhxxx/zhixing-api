@@ -10,7 +10,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('verifyToken', ['except' => ['register', 'login']]);
+        $this->middleware('verifyToken', ['except' => ['init', 'login']]);
     }
 
     public function init() {
