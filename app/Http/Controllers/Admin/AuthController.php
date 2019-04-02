@@ -13,6 +13,26 @@ class AuthController extends Controller
         $this->middleware('verifyToken', ['except' => ['register', 'login']]);
     }
 
+    public function init() {
+        if (count(Admin::getAllAdmins()) != 0) {
+            return response()->json([
+                'code' => 3,
+                'message' => '权限不足'
+            ], 403);
+        }
+        $admin = Admin::add([
+            'name' => 'sup0',
+            'password' => bcrypt('sup0'),
+            'authority' => 1
+        ]);
+        $token = auth()->login($admin);
+        return response()->json([
+            'code' => 0,
+            'message' => '超级管理员初始化成功',
+            'token' => $token
+        ]);
+    }
+
     public function login(Request $request) {
         $credentials = $request->only('name', 'password');
         if (!$token = auth()->attempt($credentials)) {

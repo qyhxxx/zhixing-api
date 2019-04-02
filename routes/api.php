@@ -28,6 +28,7 @@ Route::group(['namespace' => 'Home', 'prefix' => 'home'], function () {
 
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'useAdminGuard'], function () {
     Route::group(['prefix' => 'auth'], function () {
+        Route::get('init', 'AuthController@init');
         Route::post('login', 'AuthController@login');
         Route::get('logout', 'AuthController@logout');
         Route::get('me', 'AuthController@me');
